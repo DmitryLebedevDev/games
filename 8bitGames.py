@@ -2,6 +2,7 @@
 import pygame
 import button
 from fight_paint import FightPaintGame
+from snake import SnakeGame
 from colors import Colors
 from viewPort import ViewPort
 
@@ -43,7 +44,8 @@ while run:
     #выбор игры и их запуск
   if menu_state == "games":
     if snake_button.draw(screen):
-      snake_game() 
+      game = SnakeGame(ViewPort, screen)
+      game.play()
     if paint_fight_button.draw(screen):
       game = FightPaintGame(ViewPort, screen)
       game.play()

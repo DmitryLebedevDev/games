@@ -64,6 +64,8 @@ class FightPaintGame(Game):
         )
         player1=Player(0,0,5,Colors.BLUE,board.width,board.height)
         player2=Player(0,0,5,Colors.RED,board.width,board.height)
+        board.put_player(player1)
+        board.put_player(player2)
 
         p1_key = pygame.K_s
         p2_key = pygame.K_RIGHT
@@ -129,6 +131,7 @@ class FightPaintGame(Game):
                 else:
                     self.showMessage('Ничья', Colors.BLACK, duration=2.0, update=True)
                 super().exit()
+                continue
 
             self.showMessage(
                 str(round(end_time - time.time())), 
