@@ -7,19 +7,19 @@ from colors import Colors
 PIXEL = 5
 
 class Player:
-    def __init__(self,x,y,size,color,bWidth,bHeight):
+    def __init__(self,x,y,size,color,b_width,b_height):
         self.x=x 
         self.y=y
         self.size = size
         self.color = color 
-        self.bWidth = bWidth
-        self.bHeight = bHeight
+        self.b_width = b_width
+        self.b_height = b_height
     def to_left(self):
         if self.x-1 >= 0:
             self.x -= 1
 
     def to_right(self):
-        if self.x+self.size+1 <= self.bWidth:
+        if self.x+self.size+1 <= self.b_width:
             self.x += 1
 
     def to_top(self):
@@ -27,13 +27,13 @@ class Player:
             self.y -= 1
 
     def to_bottom(self):
-        if self.y+self.size+1 <= self.bHeight:
+        if self.y+self.size+1 <= self.b_height:
             self.y += 1
 class Board:
-    def __init__(self, width, height, defaultColor, screen):
+    def __init__(self, width, height, default_color, screen):
         self.width = width // PIXEL
         self.height = height // PIXEL
-        self.field = [[defaultColor] * self.width for _ in range(self.height)]
+        self.field = [[default_color] * self.width for _ in range(self.height)]
         self.screen = screen
 
     def put_player(self, player):
@@ -49,7 +49,7 @@ class Board:
                     (j*PIXEL, i*PIXEL, PIXEL, PIXEL)
                 )
 
-class FightPaintGame(Game):
+class Fight_paint_game(Game):
     def play(self):
         super().play()
         clock = pygame.time.Clock()
@@ -57,8 +57,8 @@ class FightPaintGame(Game):
         
         
         board=Board(
-            self.viewPort.WIDTH,
-            self.viewPort.HEIGHT,
+            self.view_port.WIDTH,
+            self.view_port.HEIGHT,
             Colors.WHITE,
             self.screen
         )
@@ -71,7 +71,7 @@ class FightPaintGame(Game):
         p2_key = pygame.K_RIGHT
         while self.is_play:
             for event in pygame.event.get():
-                super().handleExitBtnClick(event)
+                super().handle_exit_btn_click(event)
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_w:
                         p1_key = pygame.K_w
@@ -125,19 +125,19 @@ class FightPaintGame(Game):
                         
             if time.time() >= end_time:
                 if player1_score > player2_score:
-                    self.showMessage('Игрок 1 победил!', Colors.BLUE, duration=2.0, update=True)
+                    self.show_message('Игрок 1 победил!', Colors.BLUE, duration=2.0, update=True)
                 elif player2_score > player1_score:
-                    self.showMessage('Игрок 2 победил!', Colors.RED, duration=2.0, update=True)
+                    self.show_message('Игрок 2 победил!', Colors.RED, duration=2.0, update=True)
                 else:
-                    self.showMessage('Ничья', Colors.BLACK, duration=2.0, update=True)
+                    self.show_message('Ничья', Colors.BLACK, duration=2.0, update=True)
                 super().exit()
                 continue
 
-            self.showMessage(
+            self.show_message(
                 str(round(end_time - time.time())), 
                 Colors.BLACK, center=(0,-280)
             )
-            self.showMessage(
+            self.show_message(
                 f'player1 - {player1_score} player2 - {player2_score}',
                 Colors.BLACK, center=(0,-250)
             )

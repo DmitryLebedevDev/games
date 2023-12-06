@@ -1,16 +1,16 @@
 #импорт библиотек и модулей
 import pygame
 import button
-from snake import SnakeGame
-from fight_paint import FightPaintGame
-from duel import DuelGame
+from snake import Snake_game
+from fight_paint import Fight_paint_game
+from duel import Duel_game
 from colors import Colors
-from viewPort import ViewPort
+from view_port import View_port
 
 #инициализация pygame 
 pygame.init()
 
-screen = pygame.display.set_mode((ViewPort.WIDTH, ViewPort.HEIGHT))
+screen = pygame.display.set_mode((View_port.WIDTH, View_port.HEIGHT))
 pygame.display.set_caption("8-bit games")
 
 
@@ -46,11 +46,11 @@ while run:
   if menu_state == "games":
     game = None
     if snake_button.draw(screen):
-        game = SnakeGame(ViewPort, screen)
+        game = Snake_game(View_port, screen)
     if paint_fight_button.draw(screen):
-        game = FightPaintGame(ViewPort, screen)
+        game = Fight_paint_game(View_port, screen)
     if tanks_button.draw(screen):
-        game = DuelGame(ViewPort, screen)
+        game = Duel_game(View_port, screen)
     if back_button.draw(screen):
       menu_state = "main"
     if game != None:
