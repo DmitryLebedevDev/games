@@ -1,7 +1,7 @@
 #импорт библиотек и модулей
 import pygame
 import button
-from fight_paint import FightPaint
+from fight_paint import FightPaintGame
 from colors import Colors
 from viewPort import ViewPort
 
@@ -32,7 +32,7 @@ tanks_button = button.Button(300, 350, tanks_button_img, 1)
 run = True
 menu_state = "main"
 while run:
-  screen.fill((144, 238, 144))
+  screen.fill(Colors.LIME)
   #проверка состояние меню
   if menu_state == "main":
     #отрисовка кнопок меню и их выбор
@@ -45,7 +45,7 @@ while run:
     if snake_button.draw(screen):
       snake_game() 
     if paint_fight_button.draw(screen):
-      game = FightPaint(ViewPort, screen)
+      game = FightPaintGame(ViewPort, screen)
       game.play()
     if tanks_button.draw(screen):
       tanks()

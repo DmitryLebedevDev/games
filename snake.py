@@ -1,4 +1,3 @@
-#импорт библиотек
 import pygame
 import time
 from game import Game
@@ -6,50 +5,72 @@ from colors import Colors
 
 PIXEL = 5
 
-class Player:
-    def __init__(self,x,y,size,color,bWidth,bHeight):
+class Snake:
+    def __init__(self,x,y,size,color):
         self.x=x 
         self.y=y 
         self.size = size
-        self.color = color 
-        self.bWidth = bWidth
-        self.bHeight = bHeight
+        self.color = color
+        self.body = [(x,y)]
     def to_left(self):
-        if self.x-1 >= 0:
-            self.x -= 1
+        self._movie(-1,0)
     def to_right(self):
-        if self.x+self.size+1 <= self.bWidth:
-            self.x += 1
+        self._movie(1,0)
     def to_top(self):
-        if self.y-1 >= 0:
-            self.y -= 1
+        self._movie(0,-1)
     def to_bottom(self):
-        if self.y+self.size+1 <= self.bHeight:
-            self.y += 1
+        self._movie(0,1)
+    def _movie(self, ox, oy):
+        head = self.body[0]
+        tail = self.pop()
+        tail[0] = head[0]+ox
+        tail[1] = head[1]+oy
+        self.body.index(tail, 0)
+class Fruit:
+    def __init__(self,x,y,size,color):
+        self.x=x 
+        self.y=y 
+        self.size = size
+        self.color = color
+
 class Board:
-    def __init__(self, width, height, defaultColor):
+    def __init__(self, width, height, defaultColor, snakes, fruits, screen):
         self.width = width // PIXEL
         self.height = height // PIXEL
-        self.field = [[defaultColor] * self.width for _ in range(self.height)]
+        self.defaultColor = defaultColor
+        self.snakes = snakes
+        self.fruits = fruits
+        self.screen = screen
 
-    def put_player(self, player):
-        for i in range(player.size):
-            for j in range(player.size):
-                self.field[player.y + i][player.x + j] = player.color
+    def draw(self):
+        self.screen.fill(self.defaultColor)
+        for snake in self.snakes:
+            for snakePart in snake.body:
+                x, y = snakePart
+                pygame.draw.rect(
+                    self.screen,snake.color,
+                    (y*PIXEL, x*PIXEL, PIXEL, PIXEL)
+                )
+            
 
-class FightPaint(Game):
+class SnakeGame(Game):
     def play(self):
         super().play()
         clock = pygame.time.Clock()
         end_time = time.time() + 100
         
+        snake1 = Snake(0,0,5,Colors.BLUE)
+        snake2 = Snake(10,10,5,Colors.RED)
+        snakes = [snake1, snake2]
+        fruits = [Fruit(15,15,5,Colors.LIME),Fruit(15,15,5,Colors.LIME)]
         board=Board(
             self.viewPort.WIDTH,
             self.viewPort.HEIGHT,
-            Colors.WHITE
+            Colors.WHITE,
+            snakes,
+            fruits,
+            self.screen
         )
-        player1=Player(0,0,PIXEL,Colors.BLUE,board.width,board.height)
-        player2=Player(0,0,PIXEL,Colors.RED,board.width,board.height)
 
         p1_key = pygame.K_s
         p2_key = pygame.K_RIGHT
@@ -76,22 +97,22 @@ class FightPaint(Game):
                         p2_key = pygame.K_RIGHT
                 
             if p1_key == pygame.K_w:
-                player1.to_top()
+                snake1.to_top()
             elif p1_key == pygame.K_s:
-                player1.to_bottom()
+                snake1.to_bottom()
             elif p1_key == pygame.K_a:
-                player1.to_left()
+                snake1.to_left()
             elif p1_key == pygame.K_d:
-                player1.to_right()
+                snake1.to_right()
     
             if p2_key == pygame.K_UP:
-                player2.to_top()
+                snake2.to_top()
             elif p2_key == pygame.K_DOWN:
-                player2.to_bottom()
+                snake2.to_bottom()
             elif p2_key == pygame.K_LEFT:
-                player2.to_left()
+                snake2.to_left()
             elif p2_key == pygame.K_RIGHT:
-                player2.to_right()
+                snake2.to_right()
                 
             board.put_player(player1)
             board.put_player(player2)
@@ -131,4 +152,4 @@ class FightPaint(Game):
             )
             
             pygame.display.update()
-            clock.tick(60)
+            clock.tick(1)

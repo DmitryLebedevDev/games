@@ -17,39 +17,53 @@ class Player:
     def to_left(self):
         if self.x-1 >= 0:
             self.x -= 1
+
     def to_right(self):
         if self.x+self.size+1 <= self.bWidth:
             self.x += 1
+
     def to_top(self):
         if self.y-1 >= 0:
             self.y -= 1
+
     def to_bottom(self):
         if self.y+self.size+1 <= self.bHeight:
             self.y += 1
 class Board:
-    def __init__(self, width, height, defaultColor):
+    def __init__(self, width, height, defaultColor, screen):
         self.width = width // PIXEL
         self.height = height // PIXEL
         self.field = [[defaultColor] * self.width for _ in range(self.height)]
+        self.screen = screen
 
     def put_player(self, player):
         for i in range(player.size):
             for j in range(player.size):
                 self.field[player.y + i][player.x + j] = player.color
 
-class FightPaint(Game):
+    def draw(self):
+        for i in range(len(self.field)):
+            for j in range(len(self.field[i])):
+                pygame.draw.rect(
+                    self.screen,self.field[i][j],
+                    (j*PIXEL, i*PIXEL, PIXEL, PIXEL)
+                )
+
+class FightPaintGame(Game):
     def play(self):
         super().play()
         clock = pygame.time.Clock()
         end_time = time.time() + 100
         
+        
         board=Board(
             self.viewPort.WIDTH,
             self.viewPort.HEIGHT,
-            Colors.WHITE
+            Colors.WHITE,
+            self.screen
         )
-        player1=Player(0,0,PIXEL,Colors.BLUE,board.width,board.height)
-        player2=Player(0,0,PIXEL,Colors.RED,board.width,board.height)
+        player1=Player(0,0,5,Colors.BLUE,board.width,board.height)
+        player2=Player(0,0,5,Colors.RED,board.width,board.height)
 
         p1_key = pygame.K_s
         p2_key = pygame.K_RIGHT
@@ -95,12 +109,7 @@ class FightPaint(Game):
                 
             board.put_player(player1)
             board.put_player(player2)
-            for i in range(len(board.field)):
-                for j in range(len(board.field[i])):
-                    pygame.draw.rect(
-                        self.screen,board.field[i][j],
-                        (j*PIXEL, i*PIXEL, PIXEL, PIXEL)
-                    )
+            board.draw()
             
             player1_score = 0
             player2_score = 0

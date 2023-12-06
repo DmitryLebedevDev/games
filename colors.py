@@ -9,3 +9,4 @@ class Colors():
     MAGENTA = (255, 0, 255)
     CYAN = (0, 255, 255)
     YELLOW = (255, 255, 0)
+    LIME = (144, 238, 144)
