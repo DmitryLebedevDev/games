@@ -182,4 +182,4 @@ class SnakeGame(Game):
             board.draw()
             
             pygame.display.update()
-            time.sleep(0.5)
+            time.sleep(0.25)
