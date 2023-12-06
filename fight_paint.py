@@ -9,7 +9,7 @@ PIXEL = 5
 class Player:
     def __init__(self,x,y,size,color,bWidth,bHeight):
         self.x=x 
-        self.y=y 
+        self.y=y
         self.size = size
         self.color = color 
         self.bWidth = bWidth

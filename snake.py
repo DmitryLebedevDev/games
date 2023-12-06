@@ -78,14 +78,12 @@ class SnakeGame(Game):
         
         snake1 = Snake([(0,2),(0,1),(0,0)],Colors.BLUE)
         snake2 = Snake([(2,0),(1,0),(0,0)],Colors.RED)
-        snakes = [snake1, snake2]
-        fruits = [Fruit(15,15,Colors.GREEN),Fruit(20,20,Colors.GREEN)]
         board=Board(
             self.viewPort.WIDTH,
             self.viewPort.HEIGHT,
             Colors.WHITE,
-            snakes,
-            fruits,
+            [snake1, snake2],
+            [Fruit(15,15,Colors.GREEN),Fruit(20,20,Colors.GREEN)],
             self.screen
         )
 
@@ -151,9 +149,9 @@ class SnakeGame(Game):
                 continue
             
             stayedFruits = []
-            for fruit in fruits:
+            for fruit in board.fruits:
                 isEated = False
-                for snake in snakes:
+                for snake in board.snakes:
                     head = snake.head()    
                     if fruit.x == head[0] and fruit.y == head[1]:
                         snake.add_body(fruit.x, fruit.y)
@@ -161,11 +159,11 @@ class SnakeGame(Game):
                         break
                 if not isEated:
                     stayedFruits.append(fruit)
-            while len(fruits) != len(stayedFruits):
+            while len(board.fruits) != len(stayedFruits):
                 isValid = True
                 x = random.randint(0, board.width-1)
                 y = random.randint(0, board.height-1)
-                for snake in snakes:
+                for snake in board.snakes:
                     for part in snake.body:
                         if part[0] == x and part[1] == y:
                             isValid = False
@@ -176,9 +174,7 @@ class SnakeGame(Game):
                         break
                 if isValid:
                     stayedFruits.append(Fruit(x,y,Colors.GREEN))
-            fruits = stayedFruits
-
-            board.fruits = fruits
+            board.fruits = stayedFruits
             board.draw()
             
             pygame.display.update()

@@ -1,8 +1,9 @@
 #импорт библиотек и модулей
 import pygame
 import button
-from fight_paint import FightPaintGame
 from snake import SnakeGame
+from fight_paint import FightPaintGame
+from duel import DuelGame
 from colors import Colors
 from viewPort import ViewPort
 
@@ -43,16 +44,17 @@ while run:
       run = False
     #выбор игры и их запуск
   if menu_state == "games":
+    game = None
     if snake_button.draw(screen):
-      game = SnakeGame(ViewPort, screen)
-      game.play()
+        game = SnakeGame(ViewPort, screen)
     if paint_fight_button.draw(screen):
-      game = FightPaintGame(ViewPort, screen)
-      game.play()
+        game = FightPaintGame(ViewPort, screen)
     if tanks_button.draw(screen):
-      tanks()
+        game = DuelGame(ViewPort, screen)
     if back_button.draw(screen):
-      menu_state = "main"   
+      menu_state = "main"
+    if game != None:
+        game.play()
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
       run = False
