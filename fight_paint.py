@@ -6,7 +6,7 @@ from colors import Colors
 
 PIXEL = 5
 
-class Player:
+class Fpg_player:
     def __init__(self,x,y,size,color,b_width,b_height):
         self.x=x 
         self.y=y
@@ -29,7 +29,7 @@ class Player:
     def to_bottom(self):
         if self.y+self.size+1 <= self.b_height:
             self.y += 1
-class Board:
+class Fpg_board:
     def __init__(self, width, height, default_color, screen):
         self.width = width // PIXEL
         self.height = height // PIXEL
@@ -55,17 +55,16 @@ class Fight_paint_game(Game):
         clock = pygame.time.Clock()
         end_time = time.time() + 100
         
-        
-        board=Board(
+        self.board=Fpg_board(
             self.view_port.WIDTH,
             self.view_port.HEIGHT,
             Colors.WHITE,
             self.screen
         )
-        player1=Player(0,0,5,Colors.BLUE,board.width,board.height)
-        player2=Player(0,0,5,Colors.RED,board.width,board.height)
-        board.put_player(player1)
-        board.put_player(player2)
+        player1=Fpg_player(0,0,5,Colors.BLUE,self.board.width,self.board.height)
+        player2=Fpg_player(0,0,5,Colors.RED,self.board.width,self.board.height)
+        self.board.put_player(player1)
+        self.board.put_player(player2)
 
         p1_key = pygame.K_s
         p2_key = pygame.K_RIGHT
@@ -109,15 +108,15 @@ class Fight_paint_game(Game):
             elif p2_key == pygame.K_RIGHT:
                 player2.to_right()
                 
-            board.put_player(player1)
-            board.put_player(player2)
-            board.draw()
+            self.board.put_player(player1)
+            self.board.put_player(player2)
+            self.board.draw()
             
             player1_score = 0
             player2_score = 0
-            for i in range(len(board.field)):
-                for j in range(len(board.field[i])):
-                    cell = board.field[i][j]
+            for i in range(len(self.board.field)):
+                for j in range(len(self.board.field[i])):
+                    cell = self.board.field[i][j]
                     if cell == player1.color :
                         player1_score += 1
                     if cell == player2.color:

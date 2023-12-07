@@ -6,7 +6,7 @@ from colors import Colors
 
 PIXEL = 25
 
-class Snake:
+class Sg_snake:
     def __init__(self,body,color):
         self.body = body
         self.color = color
@@ -41,13 +41,13 @@ class Snake:
             0,
             (head[0]+ox, head[1]+oy)
         )
-class Fruit:
+class Sg_fruit:
     def __init__(self,x,y,color):
         self.x=x 
         self.y=y 
         self.color = color
 
-class Board:
+class Sg_board:
     def __init__(self, width, height, default_color, snakes, fruits, screen):
         self.width = width // PIXEL
         self.height = height // PIXEL
@@ -76,14 +76,14 @@ class Snake_game(Game):
     def play(self):
         super().play()
         
-        snake1 = Snake([(0,2),(0,1),(0,0)],Colors.BLUE)
-        snake2 = Snake([(2,0),(1,0),(0,0)],Colors.RED)
-        board=Board(
+        self.snake1 = Sg_snake([(0,2),(0,1),(0,0)],Colors.BLUE)
+        self.snake2 = Sg_snake([(2,0),(1,0),(0,0)],Colors.RED)
+        self.board=Sg_board(
             self.view_port.WIDTH,
             self.view_port.HEIGHT,
             Colors.WHITE,
-            [snake1, snake2],
-            [Fruit(15,15,Colors.GREEN),Fruit(20,20,Colors.GREEN)],
+            [self.snake1, self.snake2],
+            [Sg_fruit(15,15,Colors.GREEN),Sg_fruit(20,20,Colors.GREEN)],
             self.screen
         )
 
@@ -122,36 +122,36 @@ class Snake_game(Game):
                         p2_key = pygame.K_RIGHT
                 
             if p1_key == pygame.K_w:
-                snake1.to_top()
+                self.snake1.to_top()
             elif p1_key == pygame.K_s:
-                snake1.to_bottom()
+                self.snake1.to_bottom()
             elif p1_key == pygame.K_a:
-                snake1.to_left()
+                self.snake1.to_left()
             elif p1_key == pygame.K_d:
-                snake1.to_right()
+                self.snake1.to_right()
     
             if p2_key == pygame.K_UP:
-                snake2.to_top()
+                self.snake2.to_top()
             elif p2_key == pygame.K_DOWN:
-                snake2.to_bottom()
+                self.snake2.to_bottom()
             elif p2_key == pygame.K_LEFT:
-                snake2.to_left()
+                self.snake2.to_left()
             elif p2_key == pygame.K_RIGHT:
-                snake2.to_right()
+                self.snake2.to_right()
             
-            if snake1.is_lose(board.width, board.height, snake2):
-                self.show_message('Игрок 2 победил!', snake2.color, duration=2.0, update=True)
+            if self.snake1.is_lose(self.board.width, self.board.height, self.snake2):
+                self.show_message('Игрок 2 победил!', self.snake2.color, duration=2.0, update=True)
                 super().exit()
                 continue
-            if snake2.is_lose(board.width, board.height, snake1):
-                self.show_message('Игрок 1 победил!', snake1.color, duration=2.0, update=True)
+            if self.snake2.is_lose(self.board.width, self.board.height, self.snake1):
+                self.show_message('Игрок 1 победил!', self.snake1.color, duration=2.0, update=True)
                 super().exit()
                 continue
             
             stayed_fruits = []
-            for fruit in board.fruits:
+            for fruit in self.board.fruits:
                 is_eated = False
-                for snake in board.snakes:
+                for snake in self.board.snakes:
                     head = snake.head()    
                     if fruit.x == head[0] and fruit.y == head[1]:
                         snake.add_body(fruit.x, fruit.y)
@@ -159,11 +159,11 @@ class Snake_game(Game):
                         break
                 if not is_eated:
                     stayed_fruits.append(fruit)
-            while len(board.fruits) != len(stayed_fruits):
+            while len(self.board.fruits) != len(stayed_fruits):
                 is_valid = True
-                x = random.randint(0, board.width-1)
-                y = random.randint(0, board.height-1)
-                for snake in board.snakes:
+                x = random.randint(0, self.board.width-1)
+                y = random.randint(0, self.board.height-1)
+                for snake in self.board.snakes:
                     for part in snake.body:
                         if part[0] == x and part[1] == y:
                             is_valid = False
@@ -173,9 +173,9 @@ class Snake_game(Game):
                         is_valid = False
                         break
                 if is_valid:
-                    stayed_fruits.append(Fruit(x,y,Colors.GREEN))
-            board.fruits = stayed_fruits
-            board.draw()
+                    stayed_fruits.append(Sg_fruit(x,y,Colors.GREEN))
+            self.board.fruits = stayed_fruits
+            self.board.draw()
             
             pygame.display.update()
             time.sleep(0.25)

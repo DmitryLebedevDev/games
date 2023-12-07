@@ -6,7 +6,7 @@ from colors import Colors
 
 PIXEL = 5
 
-class Player:
+class Dg_player:
     def __init__(self,x,y,size,color,b_width,b_height):
         self.x=x 
         self.y=y
@@ -23,14 +23,7 @@ class Player:
         if self.x+self.size+1 <= self.b_width:
             self.x += 1
 
-    def to_top(self):
-        if self.y-1 >= 0:
-            self.y -= 1
-
-    def to_bottom(self):
-        if self.y+self.size+1 <= self.b_height:
-            self.y += 1
-class Bullet:
+class Dg_bullet:
     def __init__(self,x,y,color,offset):
         self.x=x 
         self.y=y
@@ -38,7 +31,7 @@ class Bullet:
         self.offset = offset
     def move(self):
         self.y += self.offset
-class Board:
+class Dg_board:
     def __init__(self, width, height, default_color, players, bullets, screen):
         self.width = width // PIXEL
         self.height = height // PIXEL
@@ -65,7 +58,7 @@ class Duel_game(Game):
         super().play()
         clock = pygame.time.Clock()
         
-        board=Board(
+        self.board=Dg_board(
             self.view_port.WIDTH,
             self.view_port.HEIGHT,
             Colors.WHITE,
@@ -73,10 +66,10 @@ class Duel_game(Game):
             [],
             self.screen
         )
-        player1=Player(0,0,5,Colors.BLUE,board.width,board.height)
-        player2=Player(0,115,5,Colors.RED,board.width,board.height)
-        board.players.append(player1)
-        board.players.append(player2)
+        self.player1=Dg_player(0,0,5,Colors.BLUE,self.board.width,self.board.height)
+        self.player2=Dg_player(0,115,5,Colors.RED,self.board.width,self.board.height)
+        self.board.players.append(self.player1)
+        self.board.players.append(self.player2)
 
         p1_left = None
         p1_right = None
@@ -99,14 +92,14 @@ class Duel_game(Game):
                         p2_right = None
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
-                        board.bullets.append(Bullet(player1.x+player1.size//2,5,player1.color, 1))
+                        self.board.bullets.append(Dg_bullet(self.player1.x+self.player1.size//2,5,self.player1.color, 1))
                     if event.key == pygame.K_a:
                         p1_left = time.time()
                     elif event.key == pygame.K_d:
                         p1_right = time.time()
 
                     if event.key == pygame.K_RETURN:
-                        board.bullets.append(Bullet(player2.x+player2.size//2,115,player2.color, -1))
+                        self.board.bullets.append(Dg_bullet(self.player2.x+self.player2.size//2,115,self.player2.color, -1))
                     if event.key == pygame.K_LEFT:
                         p2_left = time.time()
                     elif event.key == pygame.K_RIGHT:
@@ -114,47 +107,47 @@ class Duel_game(Game):
                 
             if p1_left != None and p1_right != None:
                 if p1_left > p1_right:
-                    player1.to_left()
+                    self.player1.to_left()
                 else:
-                    player1.to_right()
+                    self.player1.to_right()
             elif p1_left != None:
-                player1.to_left()
+                self.player1.to_left()
             elif p1_right != None:
-                player1.to_right()
+                self.player1.to_right()
     
             if p2_left != None and p2_right != None:
                 if p2_left > p2_right:
-                    player2.to_left()
+                    self.player2.to_left()
                 else:
-                    player2.to_right()
+                    self.player2.to_right()
             elif p2_left != None:
-                player2.to_left()
+                self.player2.to_left()
             elif p2_right != None:
-                player2.to_right()
+                self.player2.to_right()
             
             bullets_in_board = []
-            for bullet in board.bullets:
+            for bullet in self.board.bullets:
                 bullet.move()
-                if bullet.y >= 0 and bullet.y <= board.height:
+                if bullet.y >= 0 and bullet.y <= self.board.height:
                     bullets_in_board.append(bullet)
                 if (
-                   bullet.color != player1.color and
-                   bullet.y <= player1.y and
-                   bullet.x > player1.x and bullet.x < player1.x+player1.size
+                   bullet.color != self.player1.color and
+                   bullet.y <= self.player1.y and
+                   bullet.x > self.player1.x and bullet.x < self.player1.x+self.player1.size
                 ):
-                    self.show_message('Игрок 2 победил!', player2.color, duration=2.0, update=True)
+                    self.show_message('Игрок 2 победил!', self.player2.color, duration=2.0, update=True)
                     super().exit()
                     continue
                 if (
-                    bullet.color != player2.color and 
-                    bullet.y > player2.y and 
-                    bullet.x >= player2.x and bullet.x < player2.x+player2.size
+                    bullet.color != self.player2.color and 
+                    bullet.y > self.player2.y and 
+                    bullet.x >= self.player2.x and bullet.x < self.player2.x+self.player2.size
                 ):
-                    self.show_message('Игрок 1 победил!', player1.color, duration=2.0, update=True)
+                    self.show_message('Игрок 1 победил!', self.player1.color, duration=2.0, update=True)
                     super().exit()
                     continue
-            board.bullets = bullets_in_board
-            board.draw()
+            self.board.bullets = bullets_in_board
+            self.board.draw()
 
             pygame.display.update()
             clock.tick(60)
