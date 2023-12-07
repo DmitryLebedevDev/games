@@ -6,6 +6,7 @@ from colors import Colors
 
 PIXEL = 25
 
+# класс змейки
 class Sg_snake:
     def __init__(self,body,color):
         self.body = body
@@ -41,12 +42,13 @@ class Sg_snake:
             0,
             (head[0]+ox, head[1]+oy)
         )
+# класс фрукта
 class Sg_fruit:
     def __init__(self,x,y,color):
         self.x=x 
         self.y=y 
         self.color = color
-
+# класс доски
 class Sg_board:
     def __init__(self, width, height, default_color, snakes, fruits, screen):
         self.width = width // PIXEL
@@ -56,6 +58,7 @@ class Sg_board:
         self.fruits = fruits
         self.screen = screen
 
+    # отрисовка доски
     def draw(self):
         self.screen.fill(self.default_color)
         for fruit in self.fruits:
@@ -76,6 +79,7 @@ class Snake_game(Game):
     def play(self):
         super().play()
         
+        # создание змеек
         self.snake1 = Sg_snake([(0,2),(0,1),(0,0)],Colors.BLUE)
         self.snake2 = Sg_snake([(2,0),(1,0),(0,0)],Colors.RED)
         self.board=Sg_board(
@@ -92,6 +96,7 @@ class Snake_game(Game):
         while self.is_play:
             p1Enter = False
             p2Enter = False
+            # обработка нажатий клавишь
             for event in pygame.event.get():
                 super().handle_exit_btn_click(event)
                 if event.type == pygame.KEYDOWN:
@@ -120,7 +125,8 @@ class Snake_game(Game):
                     elif event.key == pygame.K_RIGHT and p2_key != pygame.K_LEFT and (not p2Enter):
                         p2Enter = True
                         p2_key = pygame.K_RIGHT
-                
+            
+            # движение в зависимости от нажатой
             if p1_key == pygame.K_w:
                 self.snake1.to_top()
             elif p1_key == pygame.K_s:
@@ -139,6 +145,7 @@ class Snake_game(Game):
             elif p2_key == pygame.K_RIGHT:
                 self.snake2.to_right()
             
+            # проверка на то что нет проигравших
             if self.snake1.is_lose(self.board.width, self.board.height, self.snake2):
                 self.show_message('Игрок 2 победил!', self.snake2.color, duration=2.0, update=True)
                 super().exit()
@@ -148,6 +155,7 @@ class Snake_game(Game):
                 super().exit()
                 continue
             
+            # сьедание фруктов
             stayed_fruits = []
             for fruit in self.board.fruits:
                 is_eated = False
@@ -159,6 +167,7 @@ class Snake_game(Game):
                         break
                 if not is_eated:
                     stayed_fruits.append(fruit)
+            # создание фруктов если их сьели
             while len(self.board.fruits) != len(stayed_fruits):
                 is_valid = True
                 x = random.randint(0, self.board.width-1)

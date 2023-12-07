@@ -1,3 +1,4 @@
+# цвета
 class Colors():
     TEXT_COL = (128, 128, 128)
     BG_COLOR = (132, 100, 98)

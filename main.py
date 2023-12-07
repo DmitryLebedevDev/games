@@ -22,7 +22,7 @@ class Main:
         back_img = pygame.image.load('images/back.png').convert_alpha()
         snake_button_img = pygame.image.load("images/snake.png").convert_alpha()
         paint_fight_button_img = pygame.image.load("images/paint_fight.png").convert_alpha()
-        tanks_button_img = pygame.image.load("images/tanks.png").convert_alpha()
+        duel_button_img = pygame.image.load("images/duel.png").convert_alpha()
 
         #присвоение координат кнопкам
         self.resume_button = button.Button(304, 125, resume_img, 1)
@@ -30,7 +30,7 @@ class Main:
         self.back_button = button.Button(332, 500, back_img, 1)
         self.snake_button = button.Button(300, 50, snake_button_img, 1)
         self.paint_fight_button = button.Button(300, 200, paint_fight_button_img, 1)
-        self.duel_button = button.Button(300, 350, tanks_button_img, 1)
+        self.duel_button = button.Button(300, 350, duel_button_img, 1)
 
         #меню
         run = True
@@ -51,17 +51,20 @@ class Main:
                     game = Snake_game(View_port, self.screen)
                 if self.paint_fight_button.draw(self.screen):
                     game = Fight_paint_game(View_port, self.screen)
-                if self.tanks_button.draw(self.screen):
+                if self.duel_button.draw(self.screen):
                     game = Duel_game(View_port, self.screen)
                 if self.back_button.draw(self.screen):
                     menu_state = "main"
                 if game != None:
                     game.play()
-
+            
+            # событие выхода
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
-
+            
+            # обновление экрана
             pygame.display.update()
 
+#запуск игры
 Main().run()

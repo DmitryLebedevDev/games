@@ -6,6 +6,7 @@ from colors import Colors
 
 PIXEL = 5
 
+# класс игрока
 class Dg_player:
     def __init__(self,x,y,size,color,b_width,b_height):
         self.x=x 
@@ -15,22 +16,26 @@ class Dg_player:
         self.b_width = b_width
         self.b_height = b_height
 
+    # движение влево
     def to_left(self):
         if self.x-1 >= 0:
             self.x -= 1
 
+    # движение вправо
     def to_right(self):
         if self.x+self.size+1 <= self.b_width:
             self.x += 1
-
+# класс пули
 class Dg_bullet:
     def __init__(self,x,y,color,offset):
         self.x=x 
         self.y=y
         self.color = color
         self.offset = offset
+    # движение пули
     def move(self):
         self.y += self.offset
+# класс игровой доски
 class Dg_board:
     def __init__(self, width, height, default_color, players, bullets, screen):
         self.width = width // PIXEL
@@ -40,6 +45,7 @@ class Dg_board:
         self.bullets = bullets
         self.screen = screen
 
+    # отрисовка доски на экран
     def draw(self):
         self.screen.fill(self.default_color)
         for bullet in self.bullets:
@@ -53,11 +59,13 @@ class Dg_board:
                 (player.x*PIXEL, player.y*PIXEL, player.size*PIXEL, player.size*PIXEL)
             )
 
+# класс мини игры
 class Duel_game(Game):
     def play(self):
         super().play()
         clock = pygame.time.Clock()
         
+        # создание доски
         self.board=Dg_board(
             self.view_port.WIDTH,
             self.view_port.HEIGHT,
@@ -66,6 +74,7 @@ class Duel_game(Game):
             [],
             self.screen
         )
+        # создание игроков
         self.player1=Dg_player(0,0,5,Colors.BLUE,self.board.width,self.board.height)
         self.player2=Dg_player(0,115,5,Colors.RED,self.board.width,self.board.height)
         self.board.players.append(self.player1)
@@ -78,6 +87,7 @@ class Duel_game(Game):
         p2_right = None
         while self.is_play:
             events = pygame.event.get()
+            # обработка нажатия клавишь
             for event in events:
                 super().handle_exit_btn_click(event)
                 if event.type == pygame.KEYUP:
@@ -104,7 +114,8 @@ class Duel_game(Game):
                         p2_left = time.time()
                     elif event.key == pygame.K_RIGHT:
                         p2_right = time.time()
-                
+            
+            # в зависимости от того какая кнопка нажата происходит движение
             if p1_left != None and p1_right != None:
                 if p1_left > p1_right:
                     self.player1.to_left()
@@ -125,6 +136,7 @@ class Duel_game(Game):
             elif p2_right != None:
                 self.player2.to_right()
             
+            # проверка попаданий
             bullets_in_board = []
             for bullet in self.board.bullets:
                 bullet.move()

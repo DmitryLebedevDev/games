@@ -2,17 +2,21 @@ import pygame
 import time
 from colors import Colors
 
+# базовый класс игр
 class Game():
     def __init__(self, view_port, screen):
         self.is_play = False
         self.view_port = view_port
         self.screen = screen
+    # запуск игры
     def play(self):
         self.is_play = True
         self.screen.fill(Colors.WHITE)
+    # выход из игры
     def exit(self):
         self.is_play = False
     
+    # отображение сообщения на скрине
     def show_message(
         self,
         message, 
@@ -36,6 +40,7 @@ class Game():
             pygame.display.update()
         if duration > 0:
           time.sleep(duration)
+    # обработка выхода
     def handle_exit_btn_click(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             self.exit()
